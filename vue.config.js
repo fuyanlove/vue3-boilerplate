@@ -1,7 +1,5 @@
 const path = require("path");
-const pkg = require("./package.json");
 const project = require("./project.json");
-const setting = require("./setting.json");
 module.exports = {
     //❤️ Multiple pages ~
     // pages: {
@@ -29,17 +27,7 @@ module.exports = {
     },
 
     //❤️ define path for static files ~
-    publicPath:
-        //FOR Localhost => development
-        (process.env.NODE_ENV === "development" && "/") ||
-        //BY relative path
-        (process.env.STATIC_PATH === "repo" && `/${pkg.name}/`) ||
-        //BY root path or bind a domain
-        (process.env.STATIC_PATH == "root" && "/") ||
-        //BY cdn path
-        (process.env.STATIC_PATH === "cdn" && `${setting.__cdnRoot}`) ||
-        //for lost
-        "/",
+    publicPath:process.env.NODE_ENV === "development" ? "/" : process.env.STATIC_PATH,
 
     //❤️ Webpack configuration
     chainWebpack: (config) => {
@@ -75,7 +63,6 @@ function addStyleResource(rule) {
     var preload_styles = [];
     preload_styles.push(
         path.resolve(__dirname, "./node_modules/csslab/base.less"),
-        path.resolve(__dirname, "./node_modules/@deepberry/common/css/global.less"),
         path.resolve(__dirname, "./src/assets/css/var.less")
     );
     rule.use("style-resource").loader("style-resources-loader").options({
